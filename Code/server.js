@@ -8,8 +8,8 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 const notionToken = process.env.NOTION_API_KEY || process.env.NOTION_TOKEN;
 const notion = notionToken ? new Client({ auth: notionToken, maxRetries: 0, logLevel: 'error' }) : null;
-const envPortValue = process.env.APP_PORT || process.env.SERVER_PORT || process.env.WEB_PORT;
-const listenPort = Number(envPortValue);
+const envPortValue = process.env.PORT || process.env.APP_PORT || process.env.SERVER_PORT || process.env.WEB_PORT;
+const listenPort = Number.parseInt(envPortValue, 10) || 3000;
 const NOTION_TIMEOUT_MS = 5000;
 const SEARCH_CACHE_TTL_MS = 10 * 60 * 1000;
 const MONTH_LINES_REFRESH_MS = 10 * 60 * 1000;
@@ -688,10 +688,14 @@ function startServer(port) {
   });
 }
 
-startServer(listenPort);
+if (require.main === module) {
+  startServer(listenPort);
 
-refreshMonthLinesCache()
-  .catch(() => {})
-  .finally(() => {
-    scheduleMonthLinesRefresh();
-  });
+  refreshMonthLinesCache()
+    .catch(() => {})
+    .finally(() => {
+      scheduleMonthLinesRefresh();
+    });
+}
+
+module.exports = app;
