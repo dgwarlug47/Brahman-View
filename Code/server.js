@@ -8,7 +8,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 const notionToken = process.env.NOTION_API_KEY || process.env.NOTION_TOKEN;
 const notion = notionToken ? new Client({ auth: notionToken, maxRetries: 0, logLevel: 'error' }) : null;
-const PORT = Number(process.env.PORT);
+const PORT = Number(process.env.PORT) || 3000;
 const NOTION_TIMEOUT_MS = 5000;
 const SEARCH_CACHE_TTL_MS = 10 * 60 * 1000;
 const MONTH_LINES_REFRESH_MS = 10 * 60 * 1000;
