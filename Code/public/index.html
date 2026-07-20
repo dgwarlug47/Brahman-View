@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brahman View</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 24px;
+        background: #f7f7f8;
+        color: #1f2328;
+      }
+      h1 {
+        margin-bottom: 8px;
+      }
+      button {
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 6px;
+        background: #2563eb;
+        color: white;
+        cursor: pointer;
+      }
+      .card {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-top: 16px;
+      }
+      pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 12px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Brahman View</h1>
+    <p>This page shows the same payload returned by the month-lines endpoint.</p>
+    <button id="loadBtn">Load month lines</button>
+
+    <div class="card">
+      <h2>Response</h2>
+      <pre id="output">Loading...</pre>
+    </div>
+
+    <script>
+      const output = document.getElementById('output');
+      const loadBtn = document.getElementById('loadBtn');
+
+      async function loadData() {
+        output.textContent = 'Loading...';
+        try {
+          const response = await fetch('/api/month-lines');
+          const data = await response.json();
+          output.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          output.textContent = `Error: ${error.message}`;
+        }
+      }
+
+      loadBtn.addEventListener('click', loadData);
+      loadData();
+    </script>
+  </body>
+</html>
