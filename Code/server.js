@@ -22,7 +22,7 @@ let cachedSearchExpiresAt = 0;
 let cachedMonthLinesPayload = null;
 let cachedMonthLinesUpdatedAt = null;
 let monthLinesRefreshTimer = null;
-const EXCLUDED_TITLES = new Set(['Project Brahman', 'Moving pictures', 'Art', 'Music', 'Rest', 'Sports']);
+const EXCLUDED_TITLES = new Set(['Project Brahman DoD', 'Moving pictures', 'Art', 'Music', 'Rest', 'Sports']);
 
 function formatMonthYear(date) {
   return date.toLocaleString('en-US', { month: 'long', year: 'numeric' });
