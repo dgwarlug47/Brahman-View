@@ -3,65 +3,486 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Brahman View</title>
+    <title>Project Brahman</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      :root {
+        --bg-deep: #061426;
+        --bg-mid: #0f2742;
+        --bg-light: #12375f;
+        --panel: rgba(9, 26, 46, 0.68);
+        --panel-border: rgba(148, 205, 255, 0.28);
+        --ink-main: #eaf6ff;
+        --ink-soft: #a7c6e6;
+        --accent-blue: #47c6ff;
+        --accent-coral: #ff8452;
+        --accent-lime: #95ef6b;
+        --radius-xl: 24px;
+        --radius-md: 14px;
+        --shadow-soft: 0 20px 50px rgba(0, 0, 0, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
       body {
-        font-family: Arial, sans-serif;
+        font-family: 'Space Grotesk', system-ui, sans-serif;
         margin: 0;
-        padding: 24px;
-        background: #f7f7f8;
-        color: #1f2328;
+        min-height: 100vh;
+        color: var(--ink-main);
+        background:
+          radial-gradient(circle at 15% 20%, rgba(71, 198, 255, 0.22), transparent 35%),
+          radial-gradient(circle at 86% 12%, rgba(255, 132, 82, 0.2), transparent 30%),
+          radial-gradient(circle at 80% 82%, rgba(149, 239, 107, 0.16), transparent 32%),
+          linear-gradient(130deg, var(--bg-deep), var(--bg-mid) 50%, var(--bg-light));
       }
+
+      .page {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 32px 18px 56px;
+      }
+
+      .hero {
+        position: relative;
+        margin-bottom: 20px;
+        padding-right: 190px;
+        animation: rise 480ms ease both;
+      }
+
+      .hero-image-wrap {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 162px;
+        height: 162px;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.42);
+        background: rgba(6, 20, 34, 0.55);
+        backdrop-filter: blur(6px);
+      }
+
+      .hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .kicker {
+        display: inline-block;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        color: var(--accent-blue);
+      }
+
       h1 {
-        margin-bottom: 8px;
+        font-family: 'Syne', 'Space Grotesk', sans-serif;
+        font-size: clamp(2rem, 5vw, 3.1rem);
+        line-height: 1.03;
+        margin: 10px 0 8px;
       }
+
+      .subtitle {
+        margin: 0;
+        color: var(--ink-soft);
+        max-width: 72ch;
+      }
+
+      .project-link {
+        color: var(--accent-blue);
+        font-weight: 700;
+        text-decoration-color: rgba(71, 198, 255, 0.55);
+        text-underline-offset: 3px;
+      }
+
+      .project-link:hover {
+        color: #9ee2ff;
+      }
+
+      .toolbar {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
       button {
-        padding: 10px 14px;
-        border: 0;
-        border-radius: 6px;
-        background: #2563eb;
-        color: white;
+        padding: 12px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: linear-gradient(135deg, var(--accent-coral), #ffa533);
+        color: #141414;
+        font-weight: 700;
+        font-family: inherit;
         cursor: pointer;
+        transition: transform 180ms ease, box-shadow 180ms ease;
+        box-shadow: 0 8px 20px rgba(255, 132, 82, 0.35);
       }
-      .card {
-        background: white;
-        border-radius: 10px;
-        padding: 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        margin-top: 16px;
+
+      button:hover {
+        transform: translateY(-2px);
       }
-      pre {
-        white-space: pre-wrap;
-        word-break: break-word;
-        background: #0f172a;
-        color: #e2e8f0;
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      button[disabled] {
+        opacity: 0.65;
+        cursor: wait;
+      }
+
+      .status {
+        color: var(--ink-soft);
+        font-size: 0.92rem;
+      }
+
+      .stats {
+        margin-top: 22px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        animation: rise 540ms ease both;
+      }
+
+      .stat {
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: var(--radius-md);
+        padding: 12px 14px;
+        backdrop-filter: blur(10px);
+      }
+
+      .stat-label {
+        color: var(--ink-soft);
+        font-size: 0.8rem;
+      }
+
+      .stat-value {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.6rem;
+        margin-top: 2px;
+      }
+
+      #renderRoot {
+        margin-top: 18px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .month-card {
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(11px);
+        padding: 18px 16px;
+        overflow: hidden;
+        position: relative;
+        animation: rise 420ms ease both;
+      }
+
+      .month-card::after {
+        content: '';
+        position: absolute;
+        right: -36px;
+        top: -36px;
+        width: 130px;
+        height: 130px;
+        border-radius: 999px;
+        background: radial-gradient(circle at center, rgba(71, 198, 255, 0.27), transparent 70%);
+        pointer-events: none;
+      }
+
+      .month-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+      }
+
+      .month-title {
+        margin: 0;
+        font-family: 'Syne', sans-serif;
+        font-size: 1.35rem;
+      }
+
+      .month-meta {
+        color: var(--ink-soft);
+        font-size: 0.85rem;
+      }
+
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .category-card {
+        background: rgba(4, 17, 31, 0.64);
+        border: 1px solid rgba(167, 198, 230, 0.2);
+        border-radius: 14px;
         padding: 12px;
-        border-radius: 8px;
+      }
+
+      .category-name {
+        margin: 0;
+        font-size: 0.97rem;
+      }
+
+      .item-list {
+        margin: 10px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 8px;
+      }
+
+      .item-pill {
+        background: linear-gradient(180deg, rgba(149, 239, 107, 0.18), rgba(71, 198, 255, 0.1));
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        padding: 9px 10px;
+        color: var(--ink-main);
+        font-size: 0.92rem;
+      }
+
+      .empty,
+      .error {
+        border-radius: var(--radius-md);
+        padding: 14px;
+        border: 1px solid var(--panel-border);
+        background: rgba(7, 20, 35, 0.62);
+        color: var(--ink-soft);
+      }
+
+      .error {
+        border-color: rgba(255, 132, 82, 0.45);
+        color: #ffd7c7;
+      }
+
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 760px) {
+        .hero {
+          padding-right: 0;
+        }
+
+        .hero-image-wrap {
+          position: relative;
+          width: 118px;
+          height: 118px;
+          margin: 0 0 14px auto;
+        }
+
+        .page {
+          padding: 20px 12px 34px;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .month-card {
+          padding: 14px 12px;
+        }
+
+        .month-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Brahman View</h1>
-    <p>This page shows the same payload returned by the month-lines endpoint.</p>
-    <button id="loadBtn">Load month lines</button>
+    <div class="page">
+      <section class="hero">
+        <div class="hero-image-wrap" id="heroImageWrap">
+          <img
+            src="/assets/project-brahman-statue.png"
+            alt="Project Brahman symbolic artwork"
+            class="hero-image"
+            onerror="this.parentElement.style.display='none'"
+          />
+        </div>
+        <span class="kicker">Project Brahman</span>
+        <h1>Project Brahman Previous Months View</h1>
+        <p class="subtitle">
+          A visual pass over your month-lines feed. Entries are grouped by month, then split into category panels for quick scanning.
+        </p>
+        <p class="subtitle">
+          This view is with respect to
+          <a
+            href="https://app.notion.com/p/Project-Brahman-11da22d11f6e80d4b389f68b8e135f8f"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="project-link"
+            >Project Brahman in Notion</a
+          >.
+        </p>
+        <div class="toolbar">
+          <button id="loadBtn">Refresh feed</button>
+          <span class="status" id="statusText">Loading month data...</span>
+        </div>
+      </section>
 
-    <div class="card">
-      <h2>Response</h2>
-      <pre id="output">Loading...</pre>
+      <section class="stats" id="statsBar">
+        <div class="stat">
+          <div class="stat-label">Months</div>
+          <div class="stat-value" id="monthsStat">-</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Categories</div>
+          <div class="stat-value" id="categoriesStat">-</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Items</div>
+          <div class="stat-value" id="itemsStat">-</div>
+        </div>
+      </section>
+
+      <section id="renderRoot" aria-live="polite"></section>
     </div>
 
     <script>
-      const output = document.getElementById('output');
       const loadBtn = document.getElementById('loadBtn');
+      const statusText = document.getElementById('statusText');
+      const renderRoot = document.getElementById('renderRoot');
+      const monthsStat = document.getElementById('monthsStat');
+      const categoriesStat = document.getElementById('categoriesStat');
+      const itemsStat = document.getElementById('itemsStat');
+
+      function flattenMonthData(data) {
+        return Object.entries(data || {}).map(([monthLabel, entries]) => {
+          const categories = [];
+
+          if (Array.isArray(entries)) {
+            for (const row of entries) {
+              if (!row || typeof row !== 'object') continue;
+              for (const [categoryName, rawItems] of Object.entries(row)) {
+                const items = Array.isArray(rawItems)
+                  ? rawItems.filter((item) => typeof item === 'string' && item.trim())
+                  : [];
+                categories.push({ categoryName, items });
+              }
+            }
+          }
+
+          return { monthLabel, categories };
+        });
+      }
+
+      function setStats(monthCount, categoryCount, itemCount) {
+        monthsStat.textContent = String(monthCount);
+        categoriesStat.textContent = String(categoryCount);
+        itemsStat.textContent = String(itemCount);
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function renderEmpty(message) {
+        renderRoot.innerHTML = `<div class="empty">${message}</div>`;
+      }
+
+      function renderError(message) {
+        renderRoot.innerHTML = `<div class="error">${message}</div>`;
+      }
+
+      function renderData(data) {
+        const months = flattenMonthData(data);
+        const monthCount = months.length;
+        const categoryCount = months.reduce((total, month) => total + month.categories.length, 0);
+        const itemCount = months.reduce(
+          (total, month) => total + month.categories.reduce((sum, category) => sum + category.items.length, 0),
+          0
+        );
+
+        setStats(monthCount, categoryCount, itemCount);
+
+        if (monthCount === 0) {
+          renderEmpty('No month data returned yet.');
+          return;
+        }
+
+        const monthCards = months
+          .map((month, monthIndex) => {
+            const categoriesMarkup = month.categories
+              .map((category) => {
+                const itemsMarkup = category.items.length
+                  ? `<ul class="item-list">${category.items
+                      .map((item) => `<li class="item-pill">${escapeHtml(item)}</li>`)
+                      .join('')}</ul>`
+                  : '<p class="month-meta">No entries.</p>';
+
+                return `
+                  <article class="category-card">
+                    <h3 class="category-name">${escapeHtml(category.categoryName)}</h3>
+                    ${itemsMarkup}
+                  </article>
+                `;
+              })
+              .join('');
+
+            return `
+              <section class="month-card" style="animation-delay:${monthIndex * 65}ms">
+                <header class="month-header">
+                  <h2 class="month-title">${escapeHtml(month.monthLabel)}</h2>
+                  <div class="month-meta">${month.categories.length} categories</div>
+                </header>
+                <div class="category-grid">${categoriesMarkup}</div>
+              </section>
+            `;
+          })
+          .join('');
+
+        renderRoot.innerHTML = monthCards;
+      }
 
       async function loadData() {
-        output.textContent = 'Loading...';
+        loadBtn.disabled = true;
+        statusText.textContent = 'Loading month data...';
         try {
           const response = await fetch('/api/month-lines');
+          if (!response.ok) {
+            throw new Error(`Request failed (${response.status})`);
+          }
           const data = await response.json();
-          output.textContent = JSON.stringify(data, null, 2);
+          renderData(data);
+          statusText.textContent = 'Updated just now';
         } catch (error) {
-          output.textContent = `Error: ${error.message}`;
+          setStats('-', '-', '-');
+          renderError(`Unable to load month feed: ${error.message}`);
+          statusText.textContent = 'Update failed';
+        } finally {
+          loadBtn.disabled = false;
         }
       }
 
