@@ -5,6 +5,10 @@ publish = "dist"
 
 [functions]
 directory = "netlify/functions"
+included_files = ["cache/month-lines.json"]
+
+[functions."refresh-cache"]
+schedule = "*/10 * * * *"
 
 [[redirects]]
 from = "/api/*"
