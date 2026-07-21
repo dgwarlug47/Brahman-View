@@ -8,6 +8,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 const notionToken = process.env.NOTION_API_KEY || process.env.NOTION_TOKEN;
 const notion = notionToken ? new Client({ auth: notionToken, maxRetries: 0, logLevel: 'error' }) : null;
+const isServerless = process.env.NETLIFY === 'true' || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME);
 const envPortValue = process.env.PORT || process.env.APP_PORT || process.env.SERVER_PORT || process.env.WEB_PORT;
 const parsedPort = Number.parseInt(envPortValue, 10);
 const listenPort = Number.isFinite(parsedPort) ? parsedPort : 4000;
@@ -433,6 +434,11 @@ function getCachedMonthLinesPayload() {
   return readCachedMonthLinesPayload();
 }
 
+function getStaleSafeMonthLinesPayload() {
+  const payload = getCachedMonthLinesPayload();
+  return payload || null;
+}
+
 function shouldRefreshMonthLinesCache() {
   if (!cachedMonthLinesUpdatedAt) return true;
   return Date.now() - new Date(cachedMonthLinesUpdatedAt).getTime() > MONTH_LINES_REFRESH_MS;
@@ -650,7 +656,19 @@ app.get('/api/debug-collect', async (req, res) => {
 
 app.get('/api/month-lines', async (req, res) => {
   try {
-    const cachedPayload = getCachedMonthLinesPayload();
+    const cachedPayload = getStaleSafeMonthLinesPayload();
+
+    if (isServerless) {
+      if (cachedPayload) {
+        return res.json(cachedPayload);
+      }
+
+      return res.status(503).json({
+        error: 'Month-lines cache is not available in this deployment yet',
+        retryable: true,
+      });
+    }
+
     if (cachedPayload && !shouldRefreshMonthLinesCache()) {
       return res.json(cachedPayload);
     }
@@ -699,4 +717,8 @@ if (require.main === module) {
     });
 }
 
-module.exports = app;
+module.exports = {
+  app,
+  refreshMonthLinesCache,
+  scheduleMonthLinesRefresh,
+};

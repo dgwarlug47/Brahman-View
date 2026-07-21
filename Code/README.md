@@ -13,6 +13,8 @@ This API implements the Brahman View backend that queries a Notion workspace and
 
 2. Create a `.env` file from `.env.example` and set your `NOTION_API_KEY`.
 
+  For Netlify auto-refresh every 10 minutes, set `NETLIFY_BUILD_HOOK_URL` so the scheduled function can trigger a rebuild.
+
 3. Start the server:
 
    ```bash
